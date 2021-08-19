@@ -2,7 +2,6 @@ package org.imanity.brew.game;
 
 import com.google.common.collect.Sets;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.fairy.bukkit.listener.events.EventSubscribeBuilder;
@@ -10,10 +9,10 @@ import org.fairy.bukkit.listener.events.Events;
 import org.fairy.bukkit.metadata.Metadata;
 import org.fairy.bukkit.util.Players;
 import org.fairy.metadata.MetadataKey;
+import org.fairy.metadata.MetadataMap;
 import org.fairy.util.terminable.Terminable;
 import org.fairy.util.terminable.TerminableConsumer;
 import org.fairy.util.terminable.composite.CompositeTerminable;
-import org.imanity.brew.Brew;
 import org.imanity.brew.game.event.GameJoinEvent;
 import org.imanity.brew.game.event.GameQuitEvent;
 import org.imanity.brew.scene.Scene;
@@ -21,7 +20,6 @@ import org.imanity.brew.constant.PlayerConstants;
 import org.imanity.brew.game.state.GameState;
 import org.imanity.brew.team.Team;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +43,7 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
     private final AtomicInteger teamCounter = new AtomicInteger();
     private final CompositeTerminable compositeTerminable = CompositeTerminable.create();
     private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final MetadataMap metadataMap = MetadataMap.create();
 
     public Game() {
         this.id = ID_COUNTER.getAndIncrement();
@@ -131,7 +130,7 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
             return;
         }
         this.compositeTerminable.close();
-        Brew.clear(this);
+        this.metadataMap.clear();
     }
 
     @Override
@@ -148,23 +147,23 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
     }
 
     public <T> boolean has(MetadataKey<T> metadataKey) {
-        return Brew.metadataOf(this).has(metadataKey);
+        return metadataMap.has(metadataKey);
     }
 
     public <T> T get(MetadataKey<T> metadataKey) {
-        return Brew.metadataOf(this).getOrNull(metadataKey);
+        return metadataMap.getOrNull(metadataKey);
     }
 
     public <T> T getOrPut(MetadataKey<T> metadataKey, Supplier<T> supplier) {
-        return Brew.metadataOf(this).getOrPut(metadataKey, supplier);
+        return metadataMap.getOrPut(metadataKey, supplier);
     }
 
     public <T> void put(MetadataKey<T> metadataKey, T t) {
-         Brew.metadataOf(this).put(metadataKey, t);
+        metadataMap.put(metadataKey, t);
     }
 
     public <T> boolean remove(MetadataKey<T> metadataKey) {
-        return Brew.metadataOf(this).remove(metadataKey);
+        return metadataMap.remove(metadataKey);
     }
 
     @NotNull

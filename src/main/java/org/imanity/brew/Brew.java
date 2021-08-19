@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fairy.bean.*;
-import org.fairy.metadata.AbstractMetadataRegistry;
-import org.fairy.metadata.MetadataMap;
 import org.imanity.brew.scene.Scene;
 import org.imanity.brew.scene.SceneProvider;
 import org.imanity.brew.game.Game;
@@ -32,8 +30,6 @@ public class Brew {
     private GameProvider gameProvider;
     private GameConfigurer gameConfigurer;
     private Plugin plugin;
-
-    private GameMetadataRegistry gameMetadataRegistry;
 
     @PreInitialize
     public void onPreInitialize() {
@@ -67,7 +63,6 @@ public class Brew {
         this.gameConfigurer.init();
 
         this.plugin = JavaPlugin.getProvidingPlugin(this.getClass());
-        this.gameMetadataRegistry = new GameMetadataRegistry();
     }
 
     public Scene findSceneByType(SceneType type, Game game) {
@@ -85,26 +80,6 @@ public class Brew {
 
         game.addPlayer(player);
         return true;
-    }
-
-    public static MetadataMap metadataOf(Game game) {
-        return INSTANCE.gameMetadataRegistry.provide(game);
-    }
-
-    public static void clear(Game game) {
-        INSTANCE.gameMetadataRegistry.remove(game);
-    }
-
-    private static final class GameMetadataRegistry extends AbstractMetadataRegistry<Integer> {
-
-        public MetadataMap provide(Game game) {
-            return provide(game.getId());
-        }
-
-        public void remove(Game game) {
-            this.remove(game.getId());
-        }
-
     }
 
 }

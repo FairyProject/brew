@@ -1,0 +1,74 @@
+plugins {
+    id 'base'
+    id 'io.freefair.aspectj.post-compile-weaving' version '4.1.4'
+}
+
+apply plugin: 'java-library'
+apply plugin: "maven-publish"
+apply plugin: 'io.freefair.aspectj.post-compile-weaving'
+
+group = 'org.imanity.brew'
+version = '0.1b1'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url = 'https://repo.codemc.io/repository/maven-snapshots/' }
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = 'https://maven.imanity.dev/repository/imanity-libraries/' }
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'org.imanity.imanityspigot:api:1.8.8-R0.2-SNAPSHOT'
+    compileOnly 'org.imanity.paperspigot:paper1.8.8:1.8.8'
+    compileOnly 'org.fairy:bukkit-all:0.4b5'
+    annotationProcessor 'org.fairy:bukkit-all:0.4b5'
+    compileOnly 'org.jetbrains:annotations:22.0.0'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.2'
+}
+
+if (findProperty("deploy.imanityLibraries") == "true") {
+    tasks.jar.configure {
+        classifier = "sources"
+    }
+
+    publishing {
+        publications {
+            shadow(MavenPublication) { publication ->
+                from components.java
+                pom {
+                    name = "Brew " + project.name
+                    description = "Brew API"
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                credentials {
+                    username findProperty("imanityLibrariesUsername")
+                    password findProperty("imanityLibrariesPassword")
+                }
+                url "https://maven.imanity.dev/repository/imanity-libraries/"
+            }
+        }
+    }
+}
+
+publish.dependsOn build
+
+sourceCompatibility = targetCompatibility = "1.8"
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+compileJava.ajc.options.compilerArgs += '-showWeaveInfo'
+compileJava.ajc.options.compilerArgs += '-verbose'
+
+compileTestJava.ajc.options.aspectpath.from sourceSets.main.output
+
+test {
+    useJUnitPlatform()
+}

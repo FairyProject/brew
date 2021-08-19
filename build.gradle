@@ -23,8 +23,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     compileOnly 'org.imanity.imanityspigot:api:1.8.8-R0.2-SNAPSHOT'
     compileOnly 'org.imanity.paperspigot:paper1.8.8:1.8.8'
-    compileOnly 'org.fairy:bukkit-all:0.4b5'
-    annotationProcessor 'org.fairy:bukkit-all:0.4b5'
+    compileOnly 'org.fairy:bukkit-all:0.4b6'
+    annotationProcessor 'org.fairy:annotationProcessor:0.4b6'
     compileOnly 'org.jetbrains:annotations:22.0.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 }

@@ -6,7 +6,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
-import org.fairy.bukkit.util.CustomLocation;
+import io.fairyproject.bukkit.util.CustomLocation;
 import org.imanity.brew.game.Game;
 import org.imanity.brew.scene.SceneBase;
 import org.imanity.brew.util.EmptyChunkGenerator;
@@ -49,6 +49,13 @@ public class WorldScene extends SceneBase implements Serializable {
 
         // configurable?
         world.setAutoSave(false);
+
+        this.spawnLocation.setWorld(worldName);
+        this.onInitialize();
+    }
+
+    public void onInitialize() {
+
     }
 
     @Override

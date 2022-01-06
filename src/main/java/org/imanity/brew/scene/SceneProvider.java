@@ -1,6 +1,6 @@
 package org.imanity.brew.scene;
 
-import org.fairy.util.terminable.Terminable;
+import io.fairyproject.util.terminable.Terminable;
 import org.imanity.brew.game.Game;
 
 import java.util.List;

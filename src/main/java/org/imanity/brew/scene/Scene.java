@@ -1,7 +1,7 @@
 package org.imanity.brew.scene;
 
 import org.bukkit.entity.Player;
-import org.fairy.util.terminable.Terminable;
+import io.fairyproject.util.terminable.Terminable;
 import org.imanity.brew.game.Game;
 
 public interface Scene extends Terminable {
@@ -19,7 +19,7 @@ public interface Scene extends Terminable {
     void init(Game game);
 
     /**
-     * setup the Player in Lobby
+     * set up the Player in Lobby
      *
      * @param player the Player
      * @param game the Game

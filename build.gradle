@@ -1,32 +1,40 @@
 plugins {
-    id 'base'
-    id 'io.freefair.aspectj.post-compile-weaving' version '4.1.4'
+    id "base"
+    id "jacoco"
+    id "io.fairyproject" version "1.0.0b5"
 }
 
-apply plugin: 'java-library'
+apply plugin: "java"
 apply plugin: "maven-publish"
-apply plugin: 'io.freefair.aspectj.post-compile-weaving'
 
-group = 'org.imanity.brew'
-version = '0.1b1'
+group = "org.imanity.brew"
+version = "0.1b1"
 
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url = 'https://repo.codemc.io/repository/maven-snapshots/' }
-    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
-    maven { url = 'https://maven.imanity.dev/repository/imanity-libraries/' }
+    maven { url = "https://papermc.io/repo/repository/maven-public/" }
+    maven { url = "https://maven.imanity.dev/repository/imanity-libraries/" }
+}
+
+fairy {
+    name = "brew"
+    version = "0.1b1"
+
+    fairyVersion = "0.5.1b21"
+
+    libraryMode = true
+    module("timer", "0.0.1b5")
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
-    compileOnly 'org.imanity.imanityspigot:api:1.8.8-R0.2-SNAPSHOT'
-    compileOnly 'org.imanity.paperspigot:paper1.8.8:1.8.8'
-    compileOnly 'org.fairy:bukkit-all:0.4b6'
-    annotationProcessor 'org.fairy:annotationProcessor:0.4b6'
-    compileOnly 'org.jetbrains:annotations:22.0.0'
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.2'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+    testImplementation "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+    testImplementation "org.imanity.spigot:1.16.5:1.16.5"
+    compileOnly "org.jetbrains:annotations:22.0.0"
+    compileOnly "com.github.ben-manes.caffeine:caffeine:2.9.2"
 }
 
 if (findProperty("deploy.imanityLibraries") == "true") {
@@ -64,11 +72,14 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-compileJava.ajc.options.compilerArgs += '-showWeaveInfo'
-compileJava.ajc.options.compilerArgs += '-verbose'
-
-compileTestJava.ajc.options.aspectpath.from sourceSets.main.output
-
 test {
-    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }

@@ -1,7 +1,7 @@
 package org.imanity.brew.scene.json.impl;
 
 import com.google.gson.JsonObject;
-import org.fairy.bukkit.util.CustomLocation;
+import io.fairyproject.bukkit.util.CustomLocation;
 import org.imanity.brew.scene.impl.WorldScene;
 import org.imanity.brew.scene.json.SceneSerializerBase;
 

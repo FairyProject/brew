@@ -1,9 +1,9 @@
 package org.imanity.brew.game;
 
 import org.bukkit.entity.Player;
-import org.fairy.bukkit.timer.Timer;
-import org.fairy.bukkit.timer.TimerBase;
-import org.fairy.bukkit.timer.TimerList;
+import io.fairyproject.bukkit.timer.Timer;
+import io.fairyproject.bukkit.timer.TimerBase;
+import io.fairyproject.bukkit.timer.TimerList;
 
 import java.util.Collection;
 

@@ -2,9 +2,9 @@ package org.imanity.brew.game.state;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import org.fairy.state.State;
-import org.fairy.state.StateSequences;
-import org.fairy.task.Task;
+import io.fairyproject.state.State;
+import io.fairyproject.state.StateSequences;
+import io.fairyproject.task.Task;
 import org.imanity.brew.game.Game;
 
 import java.util.List;

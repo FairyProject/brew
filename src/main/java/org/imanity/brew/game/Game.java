@@ -1,41 +1,49 @@
 package org.imanity.brew.game;
 
 import com.google.common.collect.Sets;
+import io.fairyproject.bukkit.FairyBukkitPlatform;
 import lombok.Getter;
+import lombok.Setter;
+import io.fairyproject.libs.kyori.adventure.audience.Audience;
+import io.fairyproject.libs.kyori.adventure.audience.ForwardingAudience;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerEvent;
-import org.fairy.bukkit.listener.events.EventSubscribeBuilder;
-import org.fairy.bukkit.listener.events.Events;
-import org.fairy.bukkit.metadata.Metadata;
-import org.fairy.bukkit.util.Players;
-import org.fairy.metadata.MetadataKey;
-import org.fairy.metadata.MetadataMap;
-import org.fairy.util.terminable.Terminable;
-import org.fairy.util.terminable.TerminableConsumer;
-import org.fairy.util.terminable.composite.CompositeTerminable;
+import io.fairyproject.bukkit.metadata.Metadata;
+import io.fairyproject.bukkit.util.Players;
+import io.fairyproject.metadata.MetadataMap;
+import io.fairyproject.metadata.MetadataMapProxy;
+import io.fairyproject.util.terminable.Terminable;
+import io.fairyproject.util.terminable.TerminableConsumer;
+import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import org.imanity.brew.game.event.GameJoinEvent;
 import org.imanity.brew.game.event.GameQuitEvent;
 import org.imanity.brew.scene.Scene;
 import org.imanity.brew.constant.PlayerConstants;
 import org.imanity.brew.game.state.GameState;
 import org.imanity.brew.team.Team;
+import org.imanity.brew.team.TeamEx;
+import org.imanity.brew.team.event.TeamQuitEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
+public class Game implements Terminable, TerminableConsumer, ForwardingAudience, Iterable<Player>, MetadataMapProxy, GameListener {
 
     private static final AtomicInteger ID_COUNTER = new AtomicInteger();
 
     @Getter
+    @Nullable
     private Scene lobbyScene;
     @Getter
     private GameState state;
+    @Getter
+    @Setter
+    private int maxPlayerPerTeam = 1;
     @Getter
     private final int id;
     private final Set<UUID> players = Sets.newConcurrentHashSet();
@@ -51,6 +59,7 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
 
     public void setLobbyScene(Scene scene) {
         this.lobbyScene = scene;
+        this.lobbyScene.setRunningBy(this);
         this.bind(scene);
     }
 
@@ -68,12 +77,20 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
     public void addPlayer(Player player) {
         this.players.add(player.getUniqueId());
         Metadata.provideForPlayer(player).put(PlayerConstants.GAME, this);
+
         new GameJoinEvent(player).call();
     }
 
     public void removePlayer(Player player) {
         this.players.remove(player.getUniqueId());
         Metadata.provideForPlayer(player).remove(PlayerConstants.GAME);
+
+        // remove player from their team
+        Team team = TeamEx.getTeamByPlayer(player);
+        if (team != null) {
+            team.removePlayer(player, TeamQuitEvent.Reason.DISCONNECTED);
+        }
+
         new GameQuitEvent(player).call();
     }
 
@@ -98,10 +115,12 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
         return Collections.unmodifiableCollection(this.teams.values());
     }
 
-    protected final <T extends PlayerEvent> EventSubscribeBuilder<T> listen(Class<T> type) {
-        return Events.subscribe(type)
-                .filter(event -> this.isPlayer(event.getPlayer()))
-                .bindWith(this);
+    public boolean hasTeam(Team team) {
+        return this.hasTeam(team.getId());
+    }
+
+    public boolean hasTeam(int id) {
+        return this.teams.containsKey(id);
     }
 
     protected Predicate<Player> filterPlayer() {
@@ -114,6 +133,11 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
 
     public void start() {
         this.state.start();
+
+        // Initialize basic stuff
+        if (this.lobbyScene != null) {
+            this.lobbyScene.init(this);
+        }
     }
 
     public void update() {
@@ -131,6 +155,8 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
         }
         this.compositeTerminable.close();
         this.metadataMap.clear();
+        if (this.lobbyScene != null)
+            this.lobbyScene.setRunningBy(null);
     }
 
     @Override
@@ -146,29 +172,26 @@ public class Game implements Terminable, TerminableConsumer, Iterable<Player> {
         return this.players.size();
     }
 
-    public <T> boolean has(MetadataKey<T> metadataKey) {
-        return metadataMap.has(metadataKey);
-    }
-
-    public <T> T get(MetadataKey<T> metadataKey) {
-        return metadataMap.getOrNull(metadataKey);
-    }
-
-    public <T> T getOrPut(MetadataKey<T> metadataKey, Supplier<T> supplier) {
-        return metadataMap.getOrPut(metadataKey, supplier);
-    }
-
-    public <T> void put(MetadataKey<T> metadataKey, T t) {
-        metadataMap.put(metadataKey, t);
-    }
-
-    public <T> boolean remove(MetadataKey<T> metadataKey) {
-        return metadataMap.remove(metadataKey);
+    @Override
+    public MetadataMap getMetadataMap() {
+        return this.metadataMap;
     }
 
     @NotNull
     @Override
     public Iterator<Player> iterator() {
         return this.getPlayers().iterator();
+    }
+
+    @Override
+    public final Game getGame() {
+        return this;
+    }
+
+    @Override
+    public @NotNull Iterable<? extends Audience> audiences() {
+        return Players.streamUuids(this.players)
+                .map(FairyBukkitPlatform.AUDIENCES::player)
+                .collect(Collectors.toList());
     }
 }

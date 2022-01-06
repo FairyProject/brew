@@ -5,16 +5,12 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
 import org.imanity.brew.game.Game;
 import org.imanity.brew.scene.Scene;
-import org.imanity.brew.scene.SceneProvider;
 import org.imanity.brew.scene.SceneProviderBase;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -25,7 +21,6 @@ public class SerializableSceneProvider extends SceneProviderBase {
     private static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-    private static final Logger LOGGER = LogManager.getLogger();
 
     private final File folder;
     private final SceneSerializer<?> sceneSerializer;
@@ -44,13 +39,13 @@ public class SerializableSceneProvider extends SceneProviderBase {
         this.scenes = Sets.newConcurrentHashSet();
         for (File file : Objects.requireNonNull(this.folder.listFiles())) {
             try {
-                final String s = FileUtils.readFileToString(file);
+                final String s = file.getName().substring(0, file.getName().lastIndexOf(".") - 1);
                 final JsonObject jsonObject = GSON.fromJson(s, JsonObject.class);
 
                 final Scene scene = this.sceneSerializer.deserialize(jsonObject);
                 this.scenes.add(scene);
 
-                LOGGER.info("Loaded scene " + scene.getName());
+                Bukkit.getLogger().info("Loaded scene " + scene.getName());
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }

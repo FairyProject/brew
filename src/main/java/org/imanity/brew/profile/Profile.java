@@ -15,6 +15,4 @@ public class Profile {
         this.name = name;
     }
 
-
-
 }

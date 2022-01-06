@@ -1,37 +1,63 @@
 package org.imanity.brew.listener;
 
+import io.fairyproject.bukkit.events.player.PlayerDamageEvent;
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
-import org.fairy.bukkit.events.player.PlayerDamageEvent;
-import org.imanity.brew.game.state.GameStateBase;
+import org.imanity.brew.game.GameListener;
 
 import java.util.function.Predicate;
 
 @UtilityClass
 public class ListenerPresets {
 
-    public void disallowBlockModification(GameStateBase gameState, Predicate<Player> predicate) {
-        gameState.cancelPlayer(BlockBreakEvent.class, EventPriority.NORMAL, predicate);
-        gameState.cancelPlayer(BlockPlaceEvent.class, EventPriority.NORMAL, predicate);
+    public void disallowBlockModification(GameListener gameListener) {
+        disallowBlockModification(gameListener, null);
     }
 
-    public void disallowItems(GameStateBase gameState, Predicate<Player> predicate) {
-        gameState.cancelPlayer(PlayerDropItemEvent.class, EventPriority.NORMAL, predicate);
-        gameState.cancelPlayer(PlayerPickupItemEvent.class, EventPriority.NORMAL, predicate);
-        gameState.cancelPlayer(PlayerItemDamageEvent.class, EventPriority.NORMAL, predicate);
+    public void disallowBlockModification(GameListener gameListener, Predicate<Player> predicate) {
+        gameListener.cancelPlayer(BlockBreakEvent.class, EventPriority.NORMAL, predicate);
+        gameListener.cancelPlayer(BlockPlaceEvent.class, EventPriority.NORMAL, predicate);
     }
 
-    public void disallowInteract(GameStateBase gameState, Predicate<Player> predicate) {
-        gameState.cancelPlayer(PlayerInteractEvent.class, EventPriority.NORMAL, predicate);
-        gameState.cancelPlayer(PlayerInteractEntityEvent.class, EventPriority.NORMAL, predicate);
+    public void disallowItems(GameListener gameListener) {
+        disallowItems(gameListener, null);
     }
 
-    public void disallowDamage(GameStateBase gameState, Predicate<Player> predicate) {
-        gameState.cancelPlayer(PlayerDamageEvent.class, EventPriority.NORMAL, predicate);
+    public void disallowItems(GameListener gameListener, Predicate<Player> predicate) {
+        gameListener.cancelPlayer(PlayerDropItemEvent.class, EventPriority.NORMAL, predicate);
+        gameListener.cancelPlayer(PlayerPickupItemEvent.class, EventPriority.NORMAL, predicate);
+        gameListener.cancelPlayer(PlayerItemDamageEvent.class, EventPriority.NORMAL, predicate);
+    }
+
+    public void disallowInteract(GameListener gameListener) {
+        disallowInteract(gameListener, null);
+    }
+
+    public void disallowInteract(GameListener gameListener, Predicate<Player> predicate) {
+        gameListener.cancelPlayer(PlayerInteractEvent.class, EventPriority.NORMAL, predicate);
+        gameListener.cancelPlayer(PlayerInteractEntityEvent.class, EventPriority.NORMAL, predicate);
+    }
+
+    public void disallowHungers(GameListener gameListener) {
+        disallowHungers(gameListener, null);
+    }
+
+    public void disallowHungers(GameListener gameListener, Predicate<Player> predicate) {
+        gameListener.cancelPlayer(FoodLevelChangeEvent.class, EventPriority.NORMAL, predicate);
+        gameListener.cancelPlayer(PlayerItemConsumeEvent.class, EventPriority.NORMAL, predicate);
+    }
+
+    public void disallowDamage(GameListener gameListener) {
+        disallowDamage(gameListener, null);
+    }
+
+    public void disallowDamage(GameListener gameListener, Predicate<Player> predicate) {
+        gameListener.cancelPlayer(PlayerDamageEvent.class, EventPriority.NORMAL, predicate);
     }
 
 }

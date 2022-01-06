@@ -1,7 +1,7 @@
 package org.imanity.brew.game.state;
 
 import org.bukkit.entity.Player;
-import org.fairy.bukkit.timer.TimerUnhandled;
+import io.fairyproject.bukkit.timer.TimerUnhandled;
 import org.imanity.brew.game.Game;
 
 import java.util.Collection;

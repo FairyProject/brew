@@ -1,9 +1,9 @@
 package org.imanity.brew.listener;
 
 import org.bukkit.plugin.Plugin;
-import org.fairy.bukkit.listener.FilteredEventList;
-import org.fairy.bukkit.listener.FilteredListener;
-import org.fairy.bukkit.metadata.Metadata;
+import io.fairyproject.bukkit.listener.FilteredEventList;
+import io.fairyproject.bukkit.listener.FilteredListener;
+import io.fairyproject.bukkit.metadata.Metadata;
 import org.imanity.brew.constant.PlayerConstants;
 
 /**

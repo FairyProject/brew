@@ -1,7 +1,7 @@
 package org.imanity.brew.constant;
 
 import lombok.experimental.UtilityClass;
-import org.fairy.metadata.MetadataKey;
+import io.fairyproject.metadata.MetadataKey;
 import org.imanity.brew.game.Game;
 
 @UtilityClass

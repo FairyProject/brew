@@ -1,29 +1,29 @@
 package org.imanity.brew.game.state.impl;
 
 import lombok.Getter;
+import io.fairyproject.libs.kyori.adventure.text.Component;
+import io.fairyproject.libs.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.imanity.brew.game.Game;
 import org.imanity.brew.game.state.GameStateBase;
 import org.imanity.brew.game.state.GameStateTimer;
 
+@Getter
 public abstract class TimedGameState extends GameStateBase {
 
-    @Getter
-    protected final Timer timer;
+    protected Timer timer;
+    protected final long duration;
 
     public TimedGameState(Game game, long duration) {
-        this(game, System.currentTimeMillis(), duration);
-    }
-
-    public TimedGameState(Game game, long startTime, long duration) {
         super(game);
-        this.timer = new Timer(startTime, duration);
-        this.bind(this.timer);
+        this.duration = duration;
     }
 
     @Override
     protected void onStart() {
+        this.timer = new Timer(System.currentTimeMillis(), duration);
         this.timer.start();
+        this.bind(this.timer);
     }
 
     @Override
@@ -68,12 +68,8 @@ public abstract class TimedGameState extends GameStateBase {
         return false;
     }
 
-    protected String getAnnounceMessage(Player player, int seconds) {
-        return "Time Remaining: <seconds>";
-    }
-
-    protected String getSidebarText(Player player) {
-        return "&fTimer: &e" + this.timer.getSecondsRemaining() + "s";
+    protected Component getAnnounceMessage(Player player, int seconds) {
+        return Component.text("Time Remaining: ", NamedTextColor.YELLOW).append(Component.text(seconds));
     }
 
     public class Timer extends GameStateTimer {
@@ -92,13 +88,8 @@ public abstract class TimedGameState extends GameStateBase {
         }
 
         @Override
-        public String getAnnounceMessage(Player player, int seconds) {
+        public Component getAnnounceMessage(Player player, int seconds) {
             return TimedGameState.this.getAnnounceMessage(player, seconds);
-        }
-
-        @Override
-        public String getScoreboardText(Player player) {
-            return TimedGameState.this.getSidebarText(player);
         }
 
         @Override

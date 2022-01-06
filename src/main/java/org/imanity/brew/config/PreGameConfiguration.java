@@ -1,6 +1,6 @@
 package org.imanity.brew.config;
 
-import org.fairy.config.yaml.YamlConfiguration;
+import io.fairyproject.config.yaml.YamlConfiguration;
 
 import java.nio.file.Path;
 
@@ -15,6 +15,5 @@ public class PreGameConfiguration extends YamlConfiguration {
     @Override
     protected void postLoad() {
         INITIALIZED = true;
-
     }
 }

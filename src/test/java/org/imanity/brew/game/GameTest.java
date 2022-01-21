@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class GameTest extends BukkitTestingBase {
 
@@ -124,7 +125,9 @@ public class GameTest extends BukkitTestingBase {
         states.add(b);
 
         game.setState(states);
-        game.start();
+        final CompletableFuture<?> completableFuture = game.start();
+        SERVER.getScheduler().performOneTick();
+        completableFuture.join();
 
         assertEquals("Start State A", player.nextMessage());
         assertTrue(player.simulateBlockBreak(world.createBlock(new Coordinate())).isCancelled()); // Disallowed block modification at state A

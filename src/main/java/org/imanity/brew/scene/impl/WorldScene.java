@@ -12,6 +12,7 @@ import org.imanity.brew.scene.SceneBase;
 import org.imanity.brew.util.EmptyChunkGenerator;
 
 import java.io.Serializable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 @Getter
@@ -38,20 +39,27 @@ public class WorldScene extends SceneBase implements Serializable {
     }
 
     @Override
-    public void init(Game game) {
+    public CompletableFuture<?> load(Game game) {
         if (Bukkit.getWorld(this.worldName) != null) {
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
-        final World world = this.worldConfigurer
-                .apply(new WorldCreator(this.worldName))
-                .createWorld();
+        return this.loadWorld(this.worldConfigurer
+                .apply(new WorldCreator(this.worldName)))
+                .thenAccept(world -> {
+                    world.setAutoSave(false);
 
-        // configurable?
-        world.setAutoSave(false);
+                    this.spawnLocation.setWorld(worldName);
+                    this.onInitialize();
+                });
+    }
 
-        this.spawnLocation.setWorld(worldName);
-        this.onInitialize();
+    public CompletableFuture<World> loadWorld(WorldCreator worldCreator) {
+        return CompletableFuture.completedFuture(worldCreator.createWorld());
+    }
+
+    public void unloadWorld(World world) {
+        Bukkit.unloadWorld(world, this.save);
     }
 
     public void onInitialize() {
@@ -70,7 +78,7 @@ public class WorldScene extends SceneBase implements Serializable {
             return;
         }
 
-        Bukkit.unloadWorld(world, this.save);
+        this.unloadWorld(world);
     }
 
 }

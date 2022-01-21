@@ -1,6 +1,7 @@
 package org.imanity.brew.game.impl;
 
 import io.fairyproject.container.Autowired;
+import io.fairyproject.task.Task;
 import org.bukkit.entity.Player;
 import org.imanity.brew.Brew;
 import org.imanity.brew.game.Game;
@@ -30,9 +31,7 @@ public class ConstantGameProvider implements GameProvider {
     public void init() {
         for (int i = 0; i < this.size; i++) {
             final Game game = this.brew.getGameConfigurer().buildGame();
-            game.start();
-
-            this.games.add(game);
+            game.start().thenRunAsync(() -> this.games.add(game), Task.main());
         }
     }
 

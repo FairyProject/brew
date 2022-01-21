@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 import io.fairyproject.util.terminable.Terminable;
 import org.imanity.brew.game.Game;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface Scene extends Terminable {
 
     String getName();
@@ -16,7 +18,7 @@ public interface Scene extends Terminable {
 
     Game getRunningGame();
 
-    void init(Game game);
+    CompletableFuture<?> load(Game game);
 
     /**
      * set up the Player in Lobby

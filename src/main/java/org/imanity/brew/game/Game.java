@@ -2,6 +2,7 @@ package org.imanity.brew.game;
 
 import com.google.common.collect.Sets;
 import io.fairyproject.bukkit.FairyBukkitPlatform;
+import io.fairyproject.task.Task;
 import lombok.Getter;
 import lombok.Setter;
 import io.fairyproject.libs.kyori.adventure.audience.Audience;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -131,13 +133,15 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
         return this.players.contains(player.getUniqueId());
     }
 
-    public void start() {
-        this.state.start();
+    public CompletableFuture<?> start() {
+        CompletableFuture<?> completableFuture = CompletableFuture.completedFuture(null);
 
         // Initialize basic stuff
         if (this.lobbyScene != null) {
-            this.lobbyScene.init(this);
+            completableFuture = this.lobbyScene.load(this);
         }
+
+        return completableFuture.thenRunAsync(this.state::start, Task.main());
     }
 
     public void update() {

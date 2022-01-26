@@ -48,6 +48,22 @@ public class GameTest extends BukkitTestingBase {
     }
 
     @Test
+    public void getTeamById() {
+        Game game = new Game();
+        Team team = game.createTeam();
+
+        assertSame(team, game.getTeam(team.getId()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createTeamWithIdAlreadyExists() {
+        Game game = new Game();
+
+        game.createTeam(1);
+        game.createTeam(1);
+    }
+
+    @Test
     public void getTeams() {
         Game game = new Game();
 

@@ -1,5 +1,6 @@
 package org.imanity.brew.game;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import io.fairyproject.bukkit.FairyBukkitPlatform;
 import io.fairyproject.task.Task;
@@ -96,8 +97,17 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
         new GameQuitEvent(player).call();
     }
 
+    public Team getTeam(int id) {
+        return this.teams.get(id);
+    }
+
     public Team createTeam() {
-        return this.addTeam(new Team(this, this.teamCounter.getAndIncrement()));
+        return this.createTeam(this.teamCounter.getAndIncrement());
+    }
+
+    public Team createTeam(int id) {
+        Preconditions.checkArgument(!this.hasTeam(id), "create team while team with id " + id + " already exists.");
+        return this.addTeam(new Team(this, id));
     }
 
     public Team addTeam(Team team) {

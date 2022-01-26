@@ -8,7 +8,7 @@ apply plugin: "java"
 apply plugin: "maven-publish"
 
 group = "org.imanity.brew"
-version = "0.1b3"
+version = "0.1b4"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,9 @@ repositories {
 
 fairy {
     name = "brew"
-    version = "0.1b3"
+    version = "0.1b4"
+
+    fairyVersion = "0.5.1b26"
 
     libraryMode = true
     module("timer", "0.0.1b5")

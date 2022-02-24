@@ -3,8 +3,8 @@ package org.imanity.brew.team;
 import io.fairyproject.tests.bukkit.BukkitTestingBase;
 import org.bukkit.entity.Player;
 import org.imanity.brew.game.Game;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class TeamExTest extends BukkitTestingBase {
         Player player = SERVER.addPlayer();
         team.addPlayer(player);
 
-        Assert.assertEquals(TeamEx.getTeamByPlayer(player), team);
+        Assertions.assertEquals(TeamEx.getTeamByPlayer(player), team);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class TeamExTest extends BukkitTestingBase {
 
         for (Player player : players) {
             final Team team = TeamEx.getTeamByPlayer(player);
-            Assert.assertNotNull(team);
+            Assertions.assertNotNull(team);
         }
     }
 
@@ -57,7 +57,7 @@ public class TeamExTest extends BukkitTestingBase {
 
         TeamEx.assignTeamToPlayers(game, false);
         for (Team team : teams) {
-            Assert.assertEquals(team.getPlayerCount(), game.getMaxPlayerPerTeam());
+            Assertions.assertEquals(team.getPlayerCount(), game.getMaxPlayerPerTeam());
         }
     }
 
@@ -76,8 +76,8 @@ public class TeamExTest extends BukkitTestingBase {
         }
 
         TeamEx.assignTeamEqually(game);
-        Assert.assertEquals(a.getPlayerCount(), game.getMaxPlayerPerTeam());
-        Assert.assertEquals(b.getPlayerCount(), game.getMaxPlayerPerTeam());
+        Assertions.assertEquals(a.getPlayerCount(), game.getMaxPlayerPerTeam());
+        Assertions.assertEquals(b.getPlayerCount(), game.getMaxPlayerPerTeam());
     }
 
 

@@ -3,6 +3,7 @@ package org.imanity.brew.game;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import io.fairyproject.bukkit.FairyBukkitPlatform;
+import io.fairyproject.mc.metadata.PlayerOnlineValue;
 import io.fairyproject.task.Task;
 import lombok.Getter;
 import lombok.Setter;
@@ -79,7 +80,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
 
     public void addPlayer(Player player) {
         this.players.add(player.getUniqueId());
-        Metadata.provideForPlayer(player).put(PlayerConstants.GAME, this);
+        Metadata.provideForPlayer(player).put(PlayerConstants.GAME, PlayerOnlineValue.create(this, player.getUniqueId()));
 
         new GameJoinEvent(player).call();
     }

@@ -1,14 +1,14 @@
 plugins {
     id "base"
     id "jacoco"
-    id "io.fairyproject" version "1.0.0b7"
+    id "io.fairyproject" version "1.0.1b4"
 }
 
 apply plugin: "java"
 apply plugin: "maven-publish"
 
 group = "org.imanity.brew"
-version = "0.1b4"
+version = "0.1b5-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -19,12 +19,14 @@ repositories {
 
 fairy {
     name = "brew"
-    version = "0.1b4"
-
-    fairyVersion = "0.5.1b26"
+    version = "0.1b5-SNAPSHOT"
 
     libraryMode = true
-    module("timer", "0.0.1b5")
+
+    platform("bukkit")
+    bukkitApi("1.16")
+
+    module("timer")
 }
 
 dependencies {
@@ -63,6 +65,10 @@ if (findProperty("deploy.imanityLibraries") == "true") {
             }
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 publish.dependsOn build

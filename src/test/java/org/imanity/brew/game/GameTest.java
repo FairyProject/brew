@@ -8,18 +8,20 @@ import io.fairyproject.tests.bukkit.BukkitTestingBase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.imanity.brew.constant.PlayerConstants;
-import static org.junit.Assert.*;
 
 import org.imanity.brew.game.state.GameStateBase;
 import org.imanity.brew.game.state.GameStateSequences;
 import org.imanity.brew.game.state.impl.TimedGameState;
 import org.imanity.brew.listener.ListenerPresets;
 import org.imanity.brew.team.Team;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest extends BukkitTestingBase {
 
@@ -55,12 +57,14 @@ public class GameTest extends BukkitTestingBase {
         assertSame(team, game.getTeam(team.getId()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createTeamWithIdAlreadyExists() {
-        Game game = new Game();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Game game = new Game();
 
-        game.createTeam(1);
-        game.createTeam(1);
+            game.createTeam(1);
+            game.createTeam(1);
+        });
     }
 
     @Test

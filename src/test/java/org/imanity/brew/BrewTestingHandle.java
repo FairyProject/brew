@@ -1,13 +1,14 @@
 package org.imanity.brew;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
 import io.fairyproject.bukkit.reflection.minecraft.MinecraftVersion;
 import io.fairyproject.container.ContainerContext;
-import io.fairyproject.tests.TestingHandle;
+import io.fairyproject.tests.bukkit.BukkitServerMockImpl;
+import io.fairyproject.tests.bukkit.BukkitTestingHandle;
 import io.fairyproject.tests.bukkit.FairyBukkitTestingPlatform;
-import org.jetbrains.annotations.Nullable;
 
-public class BrewTestingHandle implements TestingHandle {
+public class BrewTestingHandle implements BukkitTestingHandle {
 
     private final BrewPlugin PLUGIN = new BrewPlugin();
 
@@ -32,7 +33,12 @@ public class BrewTestingHandle implements TestingHandle {
     }
 
     @Override
-    public @Nullable String scanPath() {
+    public String scanPath() {
         return "org.imanity.brew";
+    }
+
+    @Override
+    public ServerMock createServerMock() {
+        return new BukkitServerMockImpl();
     }
 }

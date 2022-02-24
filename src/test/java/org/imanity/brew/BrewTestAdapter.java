@@ -5,7 +5,6 @@ import org.imanity.brew.game.Game;
 import org.imanity.brew.game.GameConfigurer;
 import org.imanity.brew.game.GameProvider;
 import org.imanity.brew.game.impl.ConstantGameProvider;
-import org.imanity.brew.scene.Scene;
 import org.imanity.brew.scene.SceneProvider;
 import org.imanity.brew.scene.impl.ConstantSceneProvider;
 

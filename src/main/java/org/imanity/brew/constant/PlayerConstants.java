@@ -9,8 +9,4 @@ public class PlayerConstants {
 
     public final MetadataKey<Game> GAME = MetadataKey.create("brew:scene", Game.class);
 
-    static {
-        GAME.setRemoveOnNonExists(true);
-    }
-
 }

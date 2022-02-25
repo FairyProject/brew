@@ -82,7 +82,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
         this.players.add(player.getUniqueId());
         Metadata.provideForPlayer(player).put(PlayerConstants.GAME, PlayerOnlineValue.create(this, player.getUniqueId()));
 
-        new GameJoinEvent(player).call();
+        new GameJoinEvent(player, this).call();
     }
 
     public void removePlayer(Player player) {
@@ -95,7 +95,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
             team.removePlayer(player, TeamQuitEvent.Reason.DISCONNECTED);
         }
 
-        new GameQuitEvent(player).call();
+        new GameQuitEvent(player, this).call();
     }
 
     public Team getTeam(int id) {

@@ -81,6 +81,4 @@ public class ConstantGameProvider implements GameProvider {
             }
         };
     }
-
-
 }

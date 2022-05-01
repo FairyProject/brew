@@ -45,12 +45,13 @@ public class ConstantGameProvider implements GameProvider {
         return Collections.unmodifiableList(this.games);
     }
 
-    public enum Distribution {
+    public interface Distribution {
+        @Nullable
+        Game findGame(List<Game> games);
 
-        EQUALLY {
+        Distribution EQUALLY = new Distribution() {
             @Override
-            @Nullable
-            protected Game findGame(List<Game> games) {
+            public @Nullable Game findGame(List<Game> games) {
                 int bestCount = 0;
                 Game bestGame = null;
                 for (Game game : games) {
@@ -62,10 +63,11 @@ public class ConstantGameProvider implements GameProvider {
 
                 return bestGame;
             }
-        },
-        FILLING {
+        };
+
+        Distribution FILLING  = new Distribution() {
             @Override
-            protected @Nullable Game findGame(List<Game> games) {
+            public @Nullable Game findGame(List<Game> games) {
                 int bestCount = 0;
                 Game bestGame = null;
                 for (Game game : games) {
@@ -78,12 +80,5 @@ public class ConstantGameProvider implements GameProvider {
                 return bestGame;
             }
         };
-
-        @Nullable
-        protected Game findGame(List<Game> games) {
-            throw new UnsupportedOperationException();
-        }
-
     }
-
 }

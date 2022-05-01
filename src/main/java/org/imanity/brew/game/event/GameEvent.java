@@ -8,7 +8,6 @@ import org.imanity.brew.game.Game;
 @RequiredArgsConstructor
 @Getter
 public class GameEvent extends CallableEvent {
-
     private final Game game;
 
 }

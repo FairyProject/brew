@@ -8,6 +8,8 @@ import org.imanity.brew.game.Game;
 import org.imanity.brew.game.state.GameStateBase;
 import org.imanity.brew.game.state.GameStateTimer;
 
+import java.util.Collection;
+
 @Getter
 public abstract class TimedGameState extends GameStateBase {
 
@@ -72,6 +74,10 @@ public abstract class TimedGameState extends GameStateBase {
         return Component.text("Time Remaining: ", NamedTextColor.YELLOW).append(Component.text(seconds));
     }
 
+    public Collection<? extends Player> getReceivers() {
+        return this.game.getPlayers();
+    }
+
     public class Timer extends GameStateTimer {
 
         public Timer(long startTime, long duration) {
@@ -90,6 +96,11 @@ public abstract class TimedGameState extends GameStateBase {
         @Override
         public Component getAnnounceMessage(Player player, int seconds) {
             return TimedGameState.this.getAnnounceMessage(player, seconds);
+        }
+
+        @Override
+        public Collection<? extends Player> getReceivers() {
+            return TimedGameState.this.getReceivers();
         }
 
         @Override

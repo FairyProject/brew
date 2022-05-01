@@ -3,6 +3,7 @@ package org.imanity.brew.listener;
 import io.fairyproject.bukkit.events.player.PlayerDamageEvent;
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -30,7 +31,12 @@ public class ListenerPresets {
 
     public void disallowItems(GameListener gameListener, Predicate<Player> predicate) {
         gameListener.cancelPlayer(PlayerDropItemEvent.class, EventPriority.NORMAL, predicate);
-        gameListener.cancelPlayer(PlayerPickupItemEvent.class, EventPriority.NORMAL, predicate);
+        try {
+            final Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName("org.bukkit.event.entity.EntityPickupItemEvent");
+            gameListener.cancelPlayer(eventClass, EventPriority.NORMAL, predicate);
+        } catch (ClassNotFoundException ex) {
+            gameListener.cancelPlayer(PlayerPickupItemEvent.class, EventPriority.NORMAL, predicate);
+        }
         gameListener.cancelPlayer(PlayerItemDamageEvent.class, EventPriority.NORMAL, predicate);
     }
 

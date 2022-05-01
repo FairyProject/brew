@@ -1,7 +1,7 @@
 plugins {
     id "base"
     id "jacoco"
-    id "io.fairyproject" version "1.0.1b4"
+    id "io.fairyproject" version "1.1.0b1"
 }
 
 apply plugin: "java"
@@ -19,18 +19,21 @@ repositories {
 
 fairy {
     name = "brew"
-    version = "0.1b5-SNAPSHOT"
+    version = "0.2b1-SNAPSHOT"
+    mainPackage = "org.imanity.brew"
 
     libraryMode = true
 
+    fairyVersion = "0.6.0b1-SNAPSHOT"
+    localRepo = true
     platform("bukkit")
     bukkitApi("1.16")
 
-    module("timer")
+    module("bukkit-timer")
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+    compileOnly "org.projectlombok:lombok:1.18.22"
     annotationProcessor "org.projectlombok:lombok:1.18.22"
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
     testImplementation "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
@@ -86,6 +89,6 @@ jacocoTestReport {
     reports {
         xml.required = false
         csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
     }
 }

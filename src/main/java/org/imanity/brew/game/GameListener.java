@@ -53,14 +53,14 @@ public interface GameListener extends TerminableConsumer {
     }
 
     default <U extends Event, T extends U> void cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
-        Preconditions.checkArgument(!Cancellable.class.isAssignableFrom(type), "The event class wasn't extends on Cancellable");
+        Preconditions.checkArgument(Cancellable.class.isAssignableFrom(type), "The event class wasn't extends on Cancellable");
         this.listenPlayer(type, priority, true, playerPredicate, ImmutableList.copyOf(attributes))
                 .listen(event -> ((Cancellable) event).setCancelled(true))
                 .build();
     }
 
     default <U extends Event, T extends U> void cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
-        Preconditions.checkArgument(!Cancellable.class.isAssignableFrom(type), "The event class wasn't extends on Cancellable");
+        Preconditions.checkArgument(Cancellable.class.isAssignableFrom(type), "The event class wasn't extends on Cancellable");
         this.listenPlayer(type, priority, true, playerPredicate, attributes)
                 .listen(event -> ((Cancellable) event).setCancelled(true))
                 .build();

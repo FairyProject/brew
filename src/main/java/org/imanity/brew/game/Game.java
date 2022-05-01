@@ -54,7 +54,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
     private final Map<Integer, Team> teams = new ConcurrentHashMap<>();
     private final AtomicInteger teamCounter = new AtomicInteger();
     private final CompositeTerminable compositeTerminable = CompositeTerminable.create();
-    private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final AtomicBoolean closed = new AtomicBoolean();
     private final MetadataMap metadataMap = MetadataMap.create();
 
     public Game() {
@@ -165,7 +165,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
 
     @Override
     public void close() throws Exception {
-        if (this.closed.compareAndSet(false, true)) {
+        if (!this.closed.compareAndSet(false, true)) {
             return;
         }
         this.compositeTerminable.close();
@@ -181,6 +181,10 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
 
     public List<Player> getPlayers() {
         return Players.transformUuids(this.players);
+    }
+
+    public Set<UUID> getPlayerUuids() {
+        return this.players;
     }
 
     public int getPlayerCount() {

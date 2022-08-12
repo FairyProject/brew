@@ -30,9 +30,13 @@ public abstract class PlayerState extends StateBase implements PlayerListener {
         this.player = player;
     }
 
-    @Override
     public Player player() {
         return this.player;
+    }
+
+    @Override
+    public boolean isPlayer(@NotNull Player player) {
+        return this.player == player;
     }
 
     protected void scheduleUpdate(long startDelay, long delay, boolean async) {

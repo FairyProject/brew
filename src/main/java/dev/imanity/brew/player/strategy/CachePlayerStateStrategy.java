@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,17 +30,17 @@ public class CachePlayerStateStrategy extends PlayerStateStrategy {
     private int fireTicks;
     private GameMode gameMode;
     private Location location;
-    private final EnumSet<Caching> cachings;
+    private final EnumSet<CacheFlag> cacheFlags;
     private final boolean resetOnStart;
     private final boolean restoreOnEnd;
 
-    public CachePlayerStateStrategy(int priority, boolean resetOnStart, boolean restoreOnEnd, Caching... cachings) {
-        this(priority, resetOnStart, restoreOnEnd, Arrays.asList(cachings));
+    public CachePlayerStateStrategy(int priority, boolean resetOnStart, boolean restoreOnEnd, CacheFlag... cacheFlags) {
+        this(priority, resetOnStart, restoreOnEnd, Arrays.asList(cacheFlags));
     }
 
-    public CachePlayerStateStrategy(int priority, boolean resetOnStart, boolean restoreOnEnd, Collection<Caching> cachings) {
+    public CachePlayerStateStrategy(int priority, boolean resetOnStart, boolean restoreOnEnd, Collection<CacheFlag> cacheFlags) {
         super(priority);
-        this.cachings = EnumSet.copyOf(cachings);
+        this.cacheFlags = EnumSet.copyOf(cacheFlags);
         this.resetOnStart = resetOnStart;
         this.restoreOnEnd = restoreOnEnd;
     }
@@ -50,8 +49,8 @@ public class CachePlayerStateStrategy extends PlayerStateStrategy {
     public void onStart() {
         PlayerInventory inventory = this.player().getInventory();
 
-        for (Caching caching : this.cachings) {
-            switch (caching) {
+        for (CacheFlag cacheFlag : this.cacheFlags) {
+            switch (cacheFlag) {
                 case HEALTH:
                     this.health = this.player().getHealth();
                     if (this.resetOnStart)
@@ -121,8 +120,8 @@ public class CachePlayerStateStrategy extends PlayerStateStrategy {
 
         PlayerInventory inventory = this.player().getInventory();
 
-        for (Caching caching : this.cachings) {
-            switch (caching) {
+        for (CacheFlag cacheFlag : this.cacheFlags) {
+            switch (cacheFlag) {
                 case HEALTH:
                     this.player().setHealth(this.health);
                     break;
@@ -168,23 +167,23 @@ public class CachePlayerStateStrategy extends PlayerStateStrategy {
         return new Builder();
     }
 
-    public enum Caching {
+    public enum CacheFlag {
         HEALTH, FOOD_LEVEL, INVENTORY, POTION_EFFECTS, EXP, FIRE_TICKS, GAME_MODE, LOCATION
     }
 
     public static class Builder {
 
-        private List<Caching> cachings;
+        private List<CacheFlag> cacheFlags;
         private int priority;
         private boolean resetOnStart;
         private boolean restoreOnEnd;
 
-        public Builder enableCaching(Caching... cachings) {
-            return this.enableCaching(Arrays.asList(cachings));
+        public Builder enableCaching(CacheFlag... cacheFlags) {
+            return this.enableCaching(Arrays.asList(cacheFlags));
         }
 
-        public Builder enableCaching(Collection<Caching> cachings) {
-            this.cachings.addAll(cachings);
+        public Builder enableCaching(Collection<CacheFlag> cacheFlags) {
+            this.cacheFlags.addAll(cacheFlags);
             return this;
         }
 
@@ -194,7 +193,7 @@ public class CachePlayerStateStrategy extends PlayerStateStrategy {
         }
 
         public Builder resetOnStart(boolean resetOnStart) {
-            this.resetOnStart = this.resetOnStart;
+            this.resetOnStart = resetOnStart;
             return this;
         }
 
@@ -204,7 +203,7 @@ public class CachePlayerStateStrategy extends PlayerStateStrategy {
         }
 
         public CachePlayerStateStrategy build() {
-            return new CachePlayerStateStrategy(priority, resetOnStart, restoreOnEnd, cachings);
+            return new CachePlayerStateStrategy(priority, resetOnStart, restoreOnEnd, cacheFlags);
         }
 
     }

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.function.Predicate;
 
 public interface PlayerListener extends TerminableConsumer {
 
-    Player player();
+    boolean isPlayer(@NotNull Player player);
 
     default <T extends Event & Cancellable> void cancelPlayer(Class<T> type) {
         this.cancelPlayer(type, EventPriority.NORMAL, Collections.emptyList());
@@ -135,7 +136,7 @@ public interface PlayerListener extends TerminableConsumer {
                     final Player player = PlayerEventRecognizer.tryRecognize(event, attributes.toArray(new Class[0]));
                     if (player == null)
                         return false;
-                    return player == this.player() && (playerPredicate == null || playerPredicate.test(player));
+                    return this.isPlayer(player) && (playerPredicate == null || playerPredicate.test(player));
                 })
                 .plugin(Brew.get().getPlugin())
                 .bindWith(this);

@@ -128,6 +128,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
         return this::isPlayer;
     }
 
+    @Override
     public boolean isPlayer(Player player) {
         return this.players.contains(player.getUniqueId());
     }

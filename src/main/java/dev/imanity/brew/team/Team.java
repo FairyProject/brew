@@ -2,6 +2,7 @@ package dev.imanity.brew.team;
 
 import com.google.common.collect.Sets;
 import dev.imanity.brew.game.Game;
+import dev.imanity.brew.player.PlayerListener;
 import dev.imanity.brew.util.task.IntervalTask;
 import io.fairyproject.bukkit.FairyBukkitPlatform;
 import io.fairyproject.bukkit.metadata.Metadata;
@@ -9,6 +10,9 @@ import io.fairyproject.bukkit.util.Players;
 import io.fairyproject.metadata.MetadataMap;
 import io.fairyproject.metadata.MetadataMapProxy;
 import io.fairyproject.util.terminable.Terminable;
+import io.fairyproject.util.terminable.TerminableConsumer;
+import io.fairyproject.util.terminable.composite.CompositeClosingException;
+import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import lombok.Getter;
 import io.fairyproject.libs.kyori.adventure.audience.Audience;
 import io.fairyproject.libs.kyori.adventure.audience.ForwardingAudience;
@@ -25,19 +29,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
-public class Team implements Iterable<Player>, ForwardingAudience, MetadataMapProxy, Terminable {
+public class Team implements
+        Iterable<Player>,
+        ForwardingAudience,
+        MetadataMapProxy,
+        Terminable,
+        TerminableConsumer,
+        PlayerListener {
 
     private final Game game;
     private final int id;
     private final Set<UUID> playerUuids;
     private final MetadataMap metadataMap;
     private final IntervalTask cleanup;
+    private final CompositeTerminable compositeTerminable;
 
     public Team(Game game, int id) {
         this.game = game;
         this.id = id;
         this.playerUuids = Sets.newConcurrentHashSet();
         this.metadataMap = MetadataMap.create();
+        this.compositeTerminable = CompositeTerminable.create();
         this.cleanup = IntervalTask.create(this.metadataMap::cleanup, 20 * 60);
     }
 
@@ -139,7 +151,18 @@ public class Team implements Iterable<Player>, ForwardingAudience, MetadataMapPr
     }
 
     @Override
-    public void close() {
+    public void close() throws CompositeClosingException {
         this.metadataMap.clear();
+        this.compositeTerminable.close();
+    }
+
+    @Override
+    public boolean isPlayer(@NotNull Player player) {
+        return this.playerUuids.stream().anyMatch(uuid -> player.getUniqueId() == uuid);
+    }
+
+    @Override
+    public <T extends AutoCloseable> @NotNull T bind(@NotNull T t) {
+        return this.compositeTerminable.bind(t);
     }
 }

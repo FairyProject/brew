@@ -5,6 +5,8 @@ import dev.imanity.brew.game.GameListener;
 import lombok.Getter;
 import io.fairyproject.state.StateBase;
 import io.fairyproject.task.Task;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class GameStateBase extends StateBase implements GameState, GameListener {
 
@@ -18,6 +20,11 @@ public abstract class GameStateBase extends StateBase implements GameState, Game
     @Override
     protected void onUpdate() {
         this.game.update();
+    }
+
+    @Override
+    public boolean isPlayer(@NotNull Player player) {
+        return this.game.isPlayer(player);
     }
 
     public void scheduleUpdates(int delay, int ticks) {

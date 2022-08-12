@@ -1,14 +1,14 @@
 package dev.imanity.brew.util.distribution;
 
 import dev.imanity.brew.game.Game;
+import io.fairyproject.util.Either;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
 public interface GameDistribution {
-    @Nullable
-    Game find(@NotNull Collection<Game> games);
+    Either<Game, ?> find(@NotNull Collection<Game> games);
 
     GameDistribution EQUALLY = games -> {
         int bestCount = 0;
@@ -20,7 +20,9 @@ public interface GameDistribution {
             }
         }
 
-        return bestGame;
+        if (bestGame == null)
+            return Either.right(null);
+        return Either.left(bestGame);
     };
 
     GameDistribution FILLING = games -> {
@@ -33,6 +35,8 @@ public interface GameDistribution {
             }
         }
 
-        return bestGame;
+        if (bestGame == null)
+            return Either.right(null);
+        return Either.left(bestGame);
     };
 }

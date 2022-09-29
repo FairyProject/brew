@@ -2,6 +2,8 @@ package dev.imanity.brew.listener;
 
 import dev.imanity.brew.player.PlayerListener;
 import io.fairyproject.bukkit.events.player.PlayerDamageEvent;
+import io.fairyproject.util.terminable.Terminable;
+import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -16,54 +18,63 @@ import java.util.function.Predicate;
 @UtilityClass
 public class ListenerPresets {
 
-    public void disallowBlockModification(PlayerListener gameListener) {
-        disallowBlockModification(gameListener, null);
+    public Terminable disallowBlockModification(PlayerListener gameListener) {
+        return disallowBlockModification(gameListener, null);
     }
 
-    public void disallowBlockModification(PlayerListener gameListener, Predicate<Player> predicate) {
-        gameListener.cancelPlayer(BlockBreakEvent.class, EventPriority.NORMAL, predicate);
-        gameListener.cancelPlayer(BlockPlaceEvent.class, EventPriority.NORMAL, predicate);
+    public Terminable disallowBlockModification(PlayerListener gameListener, Predicate<Player> predicate) {
+        CompositeTerminable events = CompositeTerminable.create();
+        gameListener.cancelPlayer(BlockBreakEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        gameListener.cancelPlayer(BlockPlaceEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+
+        return events;
     }
 
-    public void disallowItems(PlayerListener gameListener) {
-        disallowItems(gameListener, null);
+    public Terminable disallowItems(PlayerListener gameListener) {
+        return disallowItems(gameListener, null);
     }
 
-    public void disallowItems(PlayerListener gameListener, Predicate<Player> predicate) {
-        gameListener.cancelPlayer(PlayerDropItemEvent.class, EventPriority.NORMAL, predicate);
+    public Terminable disallowItems(PlayerListener gameListener, Predicate<Player> predicate) {
+        CompositeTerminable events = CompositeTerminable.create();
+        gameListener.cancelPlayer(PlayerDropItemEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
         try {
             final Class<? extends Event> eventClass = (Class<? extends Event>) Class.forName("org.bukkit.event.entity.EntityPickupItemEvent");
-            gameListener.cancelPlayer(eventClass, EventPriority.NORMAL, predicate);
+            gameListener.cancelPlayer(eventClass, EventPriority.NORMAL, predicate).bindWith(events);
         } catch (ClassNotFoundException ex) {
-            gameListener.cancelPlayer(PlayerPickupItemEvent.class, EventPriority.NORMAL, predicate);
+            gameListener.cancelPlayer(PlayerPickupItemEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
         }
-        gameListener.cancelPlayer(PlayerItemDamageEvent.class, EventPriority.NORMAL, predicate);
+        gameListener.cancelPlayer(PlayerItemDamageEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        return events;
     }
 
-    public void disallowInteract(PlayerListener gameListener) {
-        disallowInteract(gameListener, null);
+    public Terminable disallowInteract(PlayerListener gameListener) {
+        return disallowInteract(gameListener, null);
     }
 
-    public void disallowInteract(PlayerListener gameListener, Predicate<Player> predicate) {
-        gameListener.cancelPlayer(PlayerInteractEvent.class, EventPriority.NORMAL, predicate);
-        gameListener.cancelPlayer(PlayerInteractEntityEvent.class, EventPriority.NORMAL, predicate);
+    public Terminable disallowInteract(PlayerListener gameListener, Predicate<Player> predicate) {
+        CompositeTerminable events = CompositeTerminable.create();
+        gameListener.cancelPlayer(PlayerInteractEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        gameListener.cancelPlayer(PlayerInteractEntityEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        return events;
     }
 
-    public void disallowHungers(PlayerListener gameListener) {
-        disallowHungers(gameListener, null);
+    public Terminable disallowHungers(PlayerListener gameListener) {
+        return disallowHungers(gameListener, null);
     }
 
-    public void disallowHungers(PlayerListener gameListener, Predicate<Player> predicate) {
-        gameListener.cancelPlayer(FoodLevelChangeEvent.class, EventPriority.NORMAL, predicate);
-        gameListener.cancelPlayer(PlayerItemConsumeEvent.class, EventPriority.NORMAL, predicate);
+    public Terminable disallowHungers(PlayerListener gameListener, Predicate<Player> predicate) {
+        CompositeTerminable events = CompositeTerminable.create();
+        gameListener.cancelPlayer(FoodLevelChangeEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        gameListener.cancelPlayer(PlayerItemConsumeEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        return events;
     }
 
-    public void disallowDamage(PlayerListener gameListener) {
-        disallowDamage(gameListener, null);
+    public Terminable disallowDamage(PlayerListener gameListener) {
+        return disallowDamage(gameListener, null);
     }
 
-    public void disallowDamage(PlayerListener gameListener, Predicate<Player> predicate) {
-        gameListener.cancelPlayer(PlayerDamageEvent.class, EventPriority.NORMAL, predicate);
+    public Terminable disallowDamage(PlayerListener gameListener, Predicate<Player> predicate) {
+        return gameListener.cancelPlayer(PlayerDamageEvent.class, EventPriority.NORMAL, predicate);
     }
 
 }

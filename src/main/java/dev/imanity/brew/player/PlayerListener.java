@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import dev.imanity.brew.Brew;
 import io.fairyproject.bukkit.listener.events.EventSubscribeBuilder;
+import io.fairyproject.bukkit.listener.events.EventSubscription;
 import io.fairyproject.bukkit.listener.events.Events;
 import io.fairyproject.bukkit.player.PlayerEventRecognizer;
 import io.fairyproject.util.terminable.TerminableConsumer;
@@ -21,46 +22,46 @@ public interface PlayerListener extends TerminableConsumer {
 
     boolean isPlayer(@NotNull Player player);
 
-    default <T extends Event & Cancellable> void cancelPlayer(Class<T> type) {
-        this.cancelPlayer(type, EventPriority.NORMAL, Collections.emptyList());
+    default <T extends Event & Cancellable> EventSubscription<T> cancelPlayer(Class<T> type) {
+        return this.cancelPlayer(type, EventPriority.NORMAL, Collections.emptyList());
     }
 
-    default <T extends Event & Cancellable> void cancelPlayer(Class<T> type, EventPriority priority) {
-        this.cancelPlayer(type, priority, null, Collections.emptyList());
+    default <T extends Event & Cancellable> EventSubscription<T> cancelPlayer(Class<T> type, EventPriority priority) {
+        return this.cancelPlayer(type, priority, null, Collections.emptyList());
     }
 
-    default <T extends Event & Cancellable> void cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate) {
-        this.listenPlayer(type, priority, true, playerPredicate, Collections.emptyList())
+    default <T extends Event & Cancellable> EventSubscription<T> cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate) {
+        return this.listenPlayer(type, priority, true, playerPredicate, Collections.emptyList())
                 .listen(event -> event.setCancelled(true))
                 .build();
     }
 
-    default <U extends Event, T extends U> void cancelPlayer(Class<T> type, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
-        this.cancelPlayer(type, EventPriority.NORMAL, ImmutableList.copyOf(attributes));
+    default <U extends Event, T extends U> EventSubscription<T> cancelPlayer(Class<T> type, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
+        return this.cancelPlayer(type, EventPriority.NORMAL, ImmutableList.copyOf(attributes));
     }
 
-    default <U extends Event, T extends U> void cancelPlayer(Class<T> type, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
-        this.cancelPlayer(type, EventPriority.NORMAL, attributes);
+    default <U extends Event, T extends U> EventSubscription<T> cancelPlayer(Class<T> type, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
+        return this.cancelPlayer(type, EventPriority.NORMAL, attributes);
     }
 
-    default <U extends Event, T extends U> void cancelPlayer(Class<T> type, EventPriority priority, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
-        this.cancelPlayer(type, priority, null, ImmutableList.copyOf(attributes));
+    default <U extends Event, T extends U> EventSubscription<T> cancelPlayer(Class<T> type, EventPriority priority, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
+        return this.cancelPlayer(type, priority, null, ImmutableList.copyOf(attributes));
     }
 
-    default <U extends Event, T extends U> void cancelPlayer(Class<T> type, EventPriority priority, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
-        this.cancelPlayer(type, priority, null, attributes);
+    default <U extends Event, T extends U> EventSubscription<T> cancelPlayer(Class<T> type, EventPriority priority, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
+        return this.cancelPlayer(type, priority, null, attributes);
     }
 
-    default <U extends Event, T extends U> void cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
+    default <U extends Event, T extends U> EventSubscription<T> cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate, Class<? extends PlayerEventRecognizer.Attribute<U>>... attributes) {
         Preconditions.checkArgument(Cancellable.class.isAssignableFrom(type), "The event class wasn't extends on Cancellable");
-        this.listenPlayer(type, priority, true, playerPredicate, ImmutableList.copyOf(attributes))
+        return this.listenPlayer(type, priority, true, playerPredicate, ImmutableList.copyOf(attributes))
                 .listen(event -> ((Cancellable) event).setCancelled(true))
                 .build();
     }
 
-    default <U extends Event, T extends U> void cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
+    default <U extends Event, T extends U> EventSubscription<T> cancelPlayer(Class<T> type, EventPriority priority, Predicate<Player> playerPredicate, List<Class<? extends PlayerEventRecognizer.Attribute<U>>> attributes) {
         Preconditions.checkArgument(Cancellable.class.isAssignableFrom(type), "The event class wasn't extends on Cancellable");
-        this.listenPlayer(type, priority, true, playerPredicate, attributes)
+        return this.listenPlayer(type, priority, true, playerPredicate, attributes)
                 .listen(event -> ((Cancellable) event).setCancelled(true))
                 .build();
     }

@@ -9,7 +9,7 @@ import io.fairyproject.tests.bukkit.FairyBukkitTestingPlatform;
 
 public class BrewTestingHandle implements BukkitTestingHandle {
 
-    private final BrewPlugin PLUGIN = new BrewPlugin();
+    public static final BrewPlugin PLUGIN = new BrewPlugin();
 
     @Override
     public io.fairyproject.plugin.Plugin plugin() {

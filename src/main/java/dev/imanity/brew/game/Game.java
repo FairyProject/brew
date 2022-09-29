@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 import dev.imanity.brew.BrewEx;
 import dev.imanity.brew.game.event.GameJoinEvent;
 import dev.imanity.brew.game.event.GameQuitEvent;
-import dev.imanity.brew.game.state.GameState;
 import dev.imanity.brew.team.Team;
 import dev.imanity.brew.team.TeamEx;
 import dev.imanity.brew.team.event.TeamQuitEvent;
@@ -38,8 +37,6 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
     private static final AtomicInteger ID_COUNTER = new AtomicInteger();
 
     @Getter
-    private GameState state;
-    @Getter
     @Setter
     private int maxPlayerPerTeam = 1;
     @Getter
@@ -54,11 +51,6 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
 
     public Game() {
         this.id = ID_COUNTER.getAndIncrement();
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-        this.bind(state);
     }
 
     @NotNull
@@ -129,12 +121,8 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
     }
 
     @Override
-    public boolean isPlayer(Player player) {
+    public boolean isPlayer(@NotNull Player player) {
         return this.players.contains(player.getUniqueId());
-    }
-
-    public void start() {
-        this.state.start();
     }
 
     public void update() {
@@ -142,10 +130,6 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
 
         for (Team team : this.teams.values())
             team.update();
-    }
-
-    public boolean isConnectable() {
-        return this.state.isConnectable();
     }
 
     @Override

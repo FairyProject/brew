@@ -13,6 +13,7 @@ import io.fairyproject.bukkit.player.PlayerEventRecognizer;
 import io.fairyproject.util.terminable.TerminableConsumer;
 import dev.imanity.brew.Brew;
 import dev.imanity.brew.game.event.GameEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,11 @@ import java.util.function.Predicate;
 public interface GameListener extends PlayerListener, TerminableConsumer {
 
     Game getGame();
+
+    @Override
+    default boolean isPlayer(@NotNull Player player) {
+        return this.getGame().isPlayer(player);
+    }
 
     default <T extends GameEvent> void listenGame(Class<T> type, Consumer<T> consumer) {
         this.listenGame(type, EventPriority.NORMAL, consumer);

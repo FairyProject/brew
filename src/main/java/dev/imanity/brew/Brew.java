@@ -1,7 +1,7 @@
 package dev.imanity.brew;
 
 import io.fairyproject.container.Autowired;
-import io.fairyproject.container.PostInitialize;
+import io.fairyproject.container.PreInitialize;
 import io.fairyproject.container.Service;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
@@ -22,8 +22,8 @@ public class Brew {
     protected static Plugin UNIT_TEST_PLUGIN;
     private Plugin plugin;
 
-    @PostInitialize
-    public void onPostInitialize() {
+    @PreInitialize
+    public void onPreInitialize() {
         this.plugin = UNIT_TEST ? UNIT_TEST_PLUGIN : JavaPlugin.getProvidingPlugin(this.getClass());
     }
 

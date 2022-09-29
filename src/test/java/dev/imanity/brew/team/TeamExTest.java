@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TeamExTest extends BukkitJUnitJupiterBase {
 
-    @Test
+    //@Test
     public void getTeamForPlayer() {
         Game game = new Game();
         final Team team = game.createTeam();
@@ -22,7 +22,7 @@ public class TeamExTest extends BukkitJUnitJupiterBase {
         Assertions.assertEquals(TeamEx.getTeamByPlayer(player), team);
     }
 
-    @Test
+    //@Test
     public void createTeamForPlayers() {
         Game game = new Game();
         List<Player> players = new ArrayList<>();
@@ -40,7 +40,7 @@ public class TeamExTest extends BukkitJUnitJupiterBase {
         }
     }
 
-    @Test
+    //@Test
     public void assignTeamToPlayers() {
         Game game = new Game();
         game.setMaxPlayerPerTeam(3);
@@ -61,7 +61,7 @@ public class TeamExTest extends BukkitJUnitJupiterBase {
         }
     }
 
-    @Test
+    //@Test
     public void assignTeamEqually() {
         Game game = new Game();
         game.setMaxPlayerPerTeam(6);

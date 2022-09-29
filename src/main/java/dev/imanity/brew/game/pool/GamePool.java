@@ -35,8 +35,13 @@ public interface GamePool extends Iterable<Game>, ForwardingAudience {
     void remove(@NotNull Game game);
 
     @NotNull
-    default Either<Game, ?> find(@NotNull Player player, GameDistribution distribution) {
-        return distribution.find(this.findAll(player));
+    default Either<Game, ?> find(@NotNull Player player, @NotNull GameDistribution distribution) {
+        return distribution.find(this.findAll(player), game -> true);
+    }
+
+    @NotNull
+    default Either<Game, ?> find(@NotNull Player player, @NotNull GameDistribution distribution, Predicate<Game> gamePredicate) {
+        return distribution.find(this.findAll(player), gamePredicate);
     }
 
     @NotNull

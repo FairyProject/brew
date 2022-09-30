@@ -86,8 +86,7 @@ public class CountdownImpl implements Countdown {
             return;
         }
 
-        long count = this.timeUnit.convert(this.durationMillis - elapsedMillis, TimeUnit.MILLISECONDS);
-        System.out.println(elapsedMillis + " " + count);
+        long count = this.timeUnit.convert(this.durationMillis - elapsedMillis, TimeUnit.MILLISECONDS) + 1; // + 1 to be more precise?
 
         // if numbers to count is not set, just call the consumer
         if (this.numbersToCount.isEmpty()) {

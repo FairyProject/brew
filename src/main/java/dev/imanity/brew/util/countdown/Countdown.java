@@ -59,4 +59,6 @@ public interface Countdown {
     void tick();
 
     void reset();
+
+    long getRemainingMillis();
 }

@@ -51,7 +51,7 @@ public class CountdownImpl implements Countdown {
 
     @Override
     public boolean isStarted() {
-        return this.startMillis != 0;
+        return this.startMillis > 0;
     }
 
     @Override
@@ -112,4 +112,8 @@ public class CountdownImpl implements Countdown {
         this.consumer.accept(count);
     }
 
+    @Override
+    public long getRemainingMillis() {
+        return this.durationMillis - (System.currentTimeMillis() - this.startMillis);
+    }
 }

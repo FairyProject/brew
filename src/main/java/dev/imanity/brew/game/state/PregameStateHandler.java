@@ -55,4 +55,10 @@ public class PregameStateHandler<S, T> extends GameStateHandler<S, T> {
             }
         }
     }
+
+    @Override
+    protected void stop(StateMachine<S, T> stateMachine, S s, Trigger<T> trigger) {
+        // reset the countdown
+        this.countdown.reset();
+    }
 }

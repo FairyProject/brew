@@ -4,24 +4,25 @@ import dev.imanity.brew.game.Game;
 import dev.imanity.brew.game.GameEx;
 import dev.imanity.brew.listener.ListenerPresets;
 import dev.imanity.brew.util.countdown.Countdown;
+import io.fairyproject.state.Signal;
+import io.fairyproject.state.State;
 import io.fairyproject.state.StateMachine;
-import io.fairyproject.state.trigger.Trigger;
 import io.fairyproject.util.ConditionUtils;
 
-public class PregameStateHandler<S, T> extends GameStateHandler<S, T> {
+public class PregameStateHandler extends GameStateHandler {
 
     private final Countdown countdown;
-    private final Trigger<T> trigger;
+    private final Signal signal;
 
-    public PregameStateHandler(Game game, Countdown countdown, Trigger<T> trigger) {
+    public PregameStateHandler(Game game, Countdown countdown, Signal signal) {
         super(game);
 
         this.countdown = countdown;
-        this.trigger = trigger;
+        this.signal = signal;
     }
 
     @Override
-    protected void start(StateMachine<S, T> stateMachine, S s, Trigger<T> trigger) {
+    protected void start(StateMachine stateMachine, State state, Signal signal) {
         ConditionUtils.is(this.game.has(GameEx.MINIMUM_PLAYERS), "GameEx.MINIMUM_PLAYERS is not set");
         ConditionUtils.is(this.game.has(GameEx.MAXIMUM_PLAYERS), "GameEx.MAXIMUM_PLAYERS is not set");
 
@@ -33,7 +34,7 @@ public class PregameStateHandler<S, T> extends GameStateHandler<S, T> {
     }
 
     @Override
-    protected void tick(StateMachine<S, T> stateMachine, S s) {
+    protected void tick(StateMachine stateMachine, State s) {
         // check if the game has enough players to start
         if (this.game.getPlayerCount() >= this.game.getOrThrow(GameEx.MINIMUM_PLAYERS) && !this.countdown.isStarted()) {
             // start the timer
@@ -51,13 +52,13 @@ public class PregameStateHandler<S, T> extends GameStateHandler<S, T> {
             this.countdown.tick();
             // if the timer is finished, fire the end trigger
             if (this.countdown.isEnded()) {
-                stateMachine.fire(this.trigger);
+                stateMachine.signal(signal);
             }
         }
     }
 
     @Override
-    protected void stop(StateMachine<S, T> stateMachine, S s, Trigger<T> trigger) {
+    protected void stop(StateMachine stateMachine, State state, Signal signal) {
         // reset the countdown
         this.countdown.reset();
     }

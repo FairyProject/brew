@@ -2,15 +2,16 @@ package dev.imanity.brew.game.state;
 
 import dev.imanity.brew.game.Game;
 import dev.imanity.brew.game.GameListener;
+import io.fairyproject.state.Signal;
+import io.fairyproject.state.State;
 import io.fairyproject.state.StateHandler;
 import io.fairyproject.state.StateMachine;
-import io.fairyproject.state.trigger.Trigger;
 import io.fairyproject.util.terminable.TerminableConsumer;
 import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class GameStateHandler<S, T> implements StateHandler<S, T>, GameListener, TerminableConsumer {
+public abstract class GameStateHandler implements StateHandler, GameListener, TerminableConsumer {
 
     private final CompositeTerminable compositeTerminable = CompositeTerminable.create();
     protected final Game game;
@@ -20,32 +21,32 @@ public abstract class GameStateHandler<S, T> implements StateHandler<S, T>, Game
     }
 
     @Override
-    public final void onStart(@NotNull StateMachine<S, T> stateMachine, @NotNull S s, @Nullable Trigger<T> trigger) {
-        this.start(stateMachine, s, trigger);
+    public final void onStart(@NotNull StateMachine stateMachine, @NotNull State state, @Nullable Signal signal) {
+        this.start(stateMachine, state, signal);
     }
 
-    protected void start(StateMachine<S, T> stateMachine, S s, Trigger<T> trigger) {
-
-    }
-
-    @Override
-    public final void onTick(@NotNull StateMachine<S, T> stateMachine, @NotNull S s) {
-        this.tick(stateMachine, s);
-    }
-
-    protected void tick(StateMachine<S, T> stateMachine, S s) {
+    protected void start(StateMachine stateMachine, State state, Signal signal) {
 
     }
 
     @Override
-    public final void onStop(@NotNull StateMachine<S, T> stateMachine, @NotNull S s, @Nullable Trigger<T> trigger) {
-        this.stop(stateMachine, s, trigger);
+    public final void onTick(@NotNull StateMachine stateMachine, @NotNull State state) {
+        this.tick(stateMachine, state);
+    }
+
+    protected void tick(StateMachine stateMachine, State state) {
+
+    }
+
+    @Override
+    public final void onStop(@NotNull StateMachine stateMachine, @NotNull State state, @Nullable Signal signal) {
+        this.stop(stateMachine, state, signal);
 
         this.compositeTerminable.closeAndReportException();
         this.compositeTerminable.cleanup();
     }
 
-    protected void stop(StateMachine<S, T> stateMachine, S s, Trigger<T> trigger) {
+    protected void stop(StateMachine stateMachine, State state, Signal signal) {
     }
 
     @Override

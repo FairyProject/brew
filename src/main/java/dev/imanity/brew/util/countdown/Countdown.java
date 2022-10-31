@@ -1,10 +1,12 @@
 package dev.imanity.brew.util.countdown;
 
+import io.fairyproject.state.Signal;
+import io.fairyproject.state.State;
 import io.fairyproject.state.StateHandler;
 import io.fairyproject.state.StateMachine;
-import io.fairyproject.state.trigger.Trigger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -17,20 +19,29 @@ public interface Countdown {
     }
 
     @NotNull
-    static <S, T> StateHandler<S, T> createStatHandler(Countdown countdown, StateMachine<S, T> stateMachine, Trigger<T> trigger) {
-        return StateHandler.<S, T>builder()
-                .onStart(() -> countdown.start())
-                .onTick(() -> {
-                    if (countdown.isStarted()) {
-                        countdown.tick();
+    static StateHandler createStatHandler(Countdown countdown, Signal signal) {
+        return new StateHandler() {
+            @Override
+            public void onStart(@NotNull StateMachine stateMachine, @NotNull State state, @Nullable Signal signal) {
+                countdown.start();
+            }
 
-                        if (countdown.isEnded()) {
-                            stateMachine.fire(trigger);
-                        }
+            @Override
+            public void onTick(@NotNull StateMachine stateMachine, @NotNull State state) {
+                if (countdown.isStarted()) {
+                    countdown.tick();
+
+                    if (countdown.isEnded()) {
+                        stateMachine.signal(signal);
                     }
-                })
-                .onStop(countdown::reset)
-                .build();
+                }
+            }
+
+            @Override
+            public void onStop(@NotNull StateMachine stateMachine, @NotNull State state, @Nullable Signal signal) {
+                countdown.reset();
+            }
+        };
     }
 
     @Contract("_ -> this")

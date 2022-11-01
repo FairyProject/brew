@@ -1,6 +1,7 @@
 package dev.imanity.brew.listener;
 
 import dev.imanity.brew.player.PlayerListener;
+import io.fairyproject.bukkit.events.player.PlayerDamageByPlayerEvent;
 import io.fairyproject.bukkit.events.player.PlayerDamageEvent;
 import io.fairyproject.util.terminable.Terminable;
 import io.fairyproject.util.terminable.composite.CompositeTerminable;
@@ -10,6 +11,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 
@@ -74,7 +76,13 @@ public class ListenerPresets {
     }
 
     public Terminable disallowDamage(PlayerListener gameListener, Predicate<Player> predicate) {
-        return gameListener.cancelPlayer(PlayerDamageEvent.class, EventPriority.NORMAL, predicate);
+        CompositeTerminable events = CompositeTerminable.create();
+
+        gameListener.cancelPlayer(PlayerDamageEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        gameListener.cancelPlayer(EntityDamageEvent.class, EventPriority.NORMAL, predicate).bindWith(events);
+        gameListener.cancelPlayer(PlayerDamageByPlayerEvent.class, EventPriority.NORMAL, predicate, PlayerDamageByPlayerEvent.DamagerAttribute.class).bindWith(events);
+
+        return events;
     }
 
 }

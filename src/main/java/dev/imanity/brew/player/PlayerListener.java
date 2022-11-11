@@ -7,6 +7,7 @@ import io.fairyproject.bukkit.listener.events.EventSubscribeBuilder;
 import io.fairyproject.bukkit.listener.events.EventSubscription;
 import io.fairyproject.bukkit.listener.events.Events;
 import io.fairyproject.bukkit.player.PlayerEventRecognizer;
+import io.fairyproject.util.ConditionUtils;
 import io.fairyproject.util.terminable.TerminableConsumer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -21,6 +22,22 @@ import java.util.function.Predicate;
 public interface PlayerListener extends TerminableConsumer {
 
     boolean isPlayer(@NotNull Player player);
+
+    default PlayerListener withCondition(@NotNull Predicate<Player> predicate) {
+        ConditionUtils.notNull(predicate, "predicate");
+
+        return new PlayerListener() {
+            @Override
+            public boolean isPlayer(@NotNull Player player) {
+                return PlayerListener.this.isPlayer(player) && predicate.test(player);
+            }
+
+            @Override
+            public <T extends AutoCloseable> @NotNull T bind(@NotNull T terminable) {
+                return PlayerListener.this.bind(terminable);
+            }
+        };
+    }
 
     default <T extends Event & Cancellable> EventSubscription<T> cancelPlayer(Class<T> type) {
         return this.cancelPlayer(type, EventPriority.NORMAL, Collections.emptyList());

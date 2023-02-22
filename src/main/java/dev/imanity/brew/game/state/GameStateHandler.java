@@ -6,6 +6,7 @@ import io.fairyproject.state.Signal;
 import io.fairyproject.state.State;
 import io.fairyproject.state.StateHandler;
 import io.fairyproject.state.StateMachine;
+import io.fairyproject.util.terminable.Terminable;
 import io.fairyproject.util.terminable.TerminableConsumer;
 import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +51,7 @@ public abstract class GameStateHandler implements StateHandler, GameListener, Te
     }
 
     @Override
-    public <T1 extends AutoCloseable> @NotNull T1 bind(T1 t) {
+    public <T1 extends Terminable> @NotNull T1 bind(T1 t) {
         return this.compositeTerminable.bind(t);
     }
 

@@ -8,6 +8,7 @@ import io.fairyproject.bukkit.listener.events.EventSubscription;
 import io.fairyproject.bukkit.listener.events.Events;
 import io.fairyproject.bukkit.player.PlayerEventRecognizer;
 import io.fairyproject.util.ConditionUtils;
+import io.fairyproject.util.terminable.Terminable;
 import io.fairyproject.util.terminable.TerminableConsumer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -33,7 +34,7 @@ public interface PlayerListener extends TerminableConsumer {
             }
 
             @Override
-            public <T extends AutoCloseable> @NotNull T bind(@NotNull T terminable) {
+            public <T extends Terminable> @NotNull T bind(@NotNull T terminable) {
                 return PlayerListener.this.bind(terminable);
             }
         };

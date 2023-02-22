@@ -55,7 +55,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
 
     @NotNull
     @Override
-    public <T extends AutoCloseable> T bind(@NotNull T t) {
+    public <T extends Terminable> T bind(@NotNull T t) {
         return this.compositeTerminable.bind(t);
     }
 
@@ -67,6 +67,8 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
     }
 
     public void removePlayer(Player player) {
+        new GameQuitEvent(player, this).call();
+
         this.players.remove(player.getUniqueId());
         Metadata.provideForPlayer(player).remove(BrewEx.GAME);
 
@@ -74,8 +76,6 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
         Team team = TeamEx.getTeamByPlayer(player);
         if (team != null)
             team.removePlayer(player, TeamQuitEvent.Reason.DISCONNECTED);
-
-        new GameQuitEvent(player, this).call();
     }
 
     public Team getTeam(int id) {

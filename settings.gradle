@@ -1,1 +1,9 @@
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = "https://repo.imanity.dev/imanity-libraries" }
+    }
+}
+
 rootProject.name = 'brew'

@@ -2,7 +2,6 @@ package dev.imanity.brew;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
-import io.fairyproject.bukkit.reflection.minecraft.OBCVersion;
 import io.fairyproject.tests.bukkit.BukkitServerMockImpl;
 import io.fairyproject.tests.bukkit.BukkitTestingHandle;
 import io.fairyproject.tests.bukkit.FairyBukkitTestingPlatform;
@@ -21,12 +20,7 @@ public class BrewTestingHandle implements BukkitTestingHandle {
         Brew.UNIT_TEST = true;
         Brew.UNIT_TEST_PLUGIN = MockBukkit.createMockPlugin();
 
-        return new FairyBukkitTestingPlatform() {
-            @Override
-            public OBCVersion version() {
-                return OBCVersion.v1_16_R3;
-            }
-        };
+        return new FairyBukkitTestingPlatform();
     }
 
     @Override

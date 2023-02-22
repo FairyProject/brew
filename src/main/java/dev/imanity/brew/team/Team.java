@@ -162,7 +162,7 @@ public class Team implements
     }
 
     @Override
-    public <T extends AutoCloseable> @NotNull T bind(@NotNull T t) {
+    public <T extends Terminable> @NotNull T bind(@NotNull T t) {
         return this.compositeTerminable.bind(t);
     }
 }

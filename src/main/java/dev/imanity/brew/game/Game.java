@@ -5,8 +5,8 @@ import com.google.common.collect.Sets;
 import io.fairyproject.bukkit.FairyBukkitPlatform;
 import io.fairyproject.bukkit.metadata.Metadata;
 import io.fairyproject.bukkit.util.Players;
-import io.fairyproject.libs.kyori.adventure.audience.Audience;
-import io.fairyproject.libs.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
 import io.fairyproject.mc.metadata.PlayerOnlineValue;
 import io.fairyproject.metadata.MetadataMap;
 import io.fairyproject.metadata.MetadataMapProxy;
@@ -15,6 +15,7 @@ import io.fairyproject.util.terminable.TerminableConsumer;
 import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.entity.Player;
 import dev.imanity.brew.BrewEx;
 import dev.imanity.brew.game.event.GameJoinEvent;
@@ -180,7 +181,7 @@ public class Game implements Terminable, TerminableConsumer, ForwardingAudience,
     @Override
     public @NotNull Iterable<? extends Audience> audiences() {
         return Players.streamUuids(this.players)
-                .map(FairyBukkitPlatform.AUDIENCES::player)
+                .map(BukkitAudiences.create(FairyBukkitPlatform.PLUGIN)::player)
                 .collect(Collectors.toList());
     }
 }

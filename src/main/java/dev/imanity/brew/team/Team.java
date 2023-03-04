@@ -14,8 +14,9 @@ import io.fairyproject.util.terminable.TerminableConsumer;
 import io.fairyproject.util.terminable.composite.CompositeClosingException;
 import io.fairyproject.util.terminable.composite.CompositeTerminable;
 import lombok.Getter;
-import io.fairyproject.libs.kyori.adventure.audience.Audience;
-import io.fairyproject.libs.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.entity.Player;
 import dev.imanity.brew.team.event.TeamJoinEvent;
 import dev.imanity.brew.team.event.TeamQuitEvent;
@@ -128,7 +129,7 @@ public class Team implements
     @Override
     public @NotNull Iterable<? extends Audience> audiences() {
         return Players.streamUuids(this.playerUuids)
-                .map(FairyBukkitPlatform.AUDIENCES::player)
+                .map(BukkitAudiences.create(FairyBukkitPlatform.PLUGIN)::player)
                 .collect(Collectors.toList());
     }
 

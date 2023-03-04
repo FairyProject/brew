@@ -1,7 +1,7 @@
 package dev.imanity.brew.game.pool;
 
 import dev.imanity.brew.game.Game;
-import io.fairyproject.libs.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

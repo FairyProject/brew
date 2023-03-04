@@ -2,7 +2,7 @@ package dev.imanity.brew.game.pool;
 
 import dev.imanity.brew.game.Game;
 import dev.imanity.brew.util.distribution.GameDistribution;
-import io.fairyproject.libs.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.audience.ForwardingAudience;
 import io.fairyproject.util.ConditionUtils;
 import io.fairyproject.util.Either;
 import org.bukkit.entity.Player;

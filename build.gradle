@@ -1,17 +1,19 @@
 plugins {
-    id "java"
+    id "java-library"
     id "base"
     id "jacoco"
     id "maven-publish"
-    id "io.fairyproject" version "0.6.4b3-SNAPSHOT"
+    id "io.fairyproject" version "0.6.6b1-SNAPSHOT"
     id "io.spring.dependency-management" version "1.1.0"
 }
 
 group = "dev.imanity.brew"
-version = "0.3b7-SNAPSHOT"
+version = "0.4b1-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    maven { url = "https://jitpack.io" }
     maven { url = "https://papermc.io/repo/repository/maven-public/" }
 }
 
@@ -20,9 +22,9 @@ fairy {
 }
 
 dependencies {
-    compileOnly "io.fairyproject:bukkit-platform"
-    compileOnly "io.fairyproject:bukkit-timer"
-    compileOnly "io.fairyproject:module.config"
+    compileOnlyApi "io.fairyproject:bukkit-platform"
+    compileOnlyApi "io.fairyproject:bukkit-timer"
+    compileOnlyApi "io.fairyproject:module.config"
 
     testImplementation "io.fairyproject:bukkit-platform"
     testImplementation "io.fairyproject:bukkit-tests"
@@ -32,8 +34,7 @@ dependencies {
 
 dependencies {
     compileOnly "org.projectlombok:lombok:1.18.24"
-    implementation "com.github.stateless4j:stateless4j:2.6.0"
-    
+
     annotationProcessor "org.projectlombok:lombok:1.18.24"
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
     testImplementation "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"

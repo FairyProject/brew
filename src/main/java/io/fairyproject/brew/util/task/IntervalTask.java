@@ -6,6 +6,8 @@ public interface IntervalTask {
         return new IntervalTaskImpl(runnable, ticks);
     }
 
+    void reset();
+
     void update();
 
 }

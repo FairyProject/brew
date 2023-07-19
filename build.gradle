@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.imanity.brew"
-version = "0.4b1-SNAPSHOT"
+version = "0.4b3-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -22,9 +22,9 @@ fairy {
 }
 
 dependencies {
-    compileOnlyApi "io.fairyproject:bukkit-platform"
-    compileOnlyApi "io.fairyproject:bukkit-timer"
-    compileOnlyApi "io.fairyproject:module.config"
+    compileOnly "io.fairyproject:bukkit-platform"
+    compileOnly "io.fairyproject:bukkit-timer"
+    compileOnly "io.fairyproject:module.config"
 
     testImplementation "io.fairyproject:bukkit-platform"
     testImplementation "io.fairyproject:bukkit-tests"

@@ -1,8 +1,8 @@
 package io.fairyproject.brew.game.state;
 
+import io.fairyproject.brew.FairyBrew;
 import io.fairyproject.brew.game.Game;
-import io.fairyproject.brew.game.GameEx;
-import io.fairyproject.brew.listener.ListenerPresets;
+import io.fairyproject.brew.listener.EventNodePresets;
 import io.fairyproject.brew.util.countdown.Countdown;
 import io.fairyproject.state.Signal;
 import io.fairyproject.state.State;
@@ -23,26 +23,26 @@ public class PregameStateHandler extends GameStateHandler {
 
     @Override
     protected void start(StateMachine stateMachine, State state, Signal signal) {
-        ConditionUtils.is(this.game.has(GameEx.MINIMUM_PLAYERS), "GameEx.MINIMUM_PLAYERS is not set");
-        ConditionUtils.is(this.game.has(GameEx.MAXIMUM_PLAYERS), "GameEx.MAXIMUM_PLAYERS is not set");
+        ConditionUtils.is(this.game.has(FairyBrew.MINIMUM_PLAYERS_KEY), "FairyBrew.MINIMUM_PLAYERS_KEY is not set");
+        ConditionUtils.is(this.game.has(FairyBrew.MAXIMUM_PLAYERS_KEY), "FairyBrew.MAXIMUM_PLAYERS_KEY is not set");
 
-        ListenerPresets.disallowBlockModification(this);
-        ListenerPresets.disallowDamage(this);
-        ListenerPresets.disallowItems(this);
-        ListenerPresets.disallowHungers(this);
-        ListenerPresets.disallowInteract(this);
+        this.eventNode.addChild(EventNodePresets.getCancelBlockModification());
+        this.eventNode.addChild(EventNodePresets.getCancelDamage());
+        this.eventNode.addChild(EventNodePresets.getCancelItemInteraction());
+        this.eventNode.addChild(EventNodePresets.getCancelHungerLevel());
+        this.eventNode.addChild(EventNodePresets.getCancelWorldInteraction());
     }
 
     @Override
     protected void tick(StateMachine stateMachine, State s) {
         // check if the game has enough players to start
-        if (this.game.getPlayerCount() >= this.game.getOrThrow(GameEx.MINIMUM_PLAYERS) && !this.countdown.isStarted()) {
+        if (this.game.getPlayerCount() >= this.game.getOrThrow(FairyBrew.MINIMUM_PLAYERS_KEY) && !this.countdown.isStarted()) {
             // start the timer
             this.countdown.start();
         }
 
         // check if the game doesn't have enough players
-        if (game.getPlayerCount() < game.getOrThrow(GameEx.MINIMUM_PLAYERS) && this.countdown.isStarted()) {
+        if (game.getPlayerCount() < game.getOrThrow(FairyBrew.MINIMUM_PLAYERS_KEY) && this.countdown.isStarted()) {
             // reset the timer
             this.countdown.reset();
         }

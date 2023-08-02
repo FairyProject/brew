@@ -18,17 +18,17 @@ import org.jetbrains.annotations.Nullable;
 public abstract class GameStateHandler implements StateHandler, GameListener, TerminableConsumer {
 
     private final CompositeTerminable compositeTerminable;
-    protected final EventNode<Event> eventNode;
     protected final Game game;
+    protected EventNode<Event> eventNode;
 
     public GameStateHandler(Game game) {
         this.game = game;
         this.compositeTerminable = CompositeTerminable.create();
-        this.eventNode = EventNode.event("game-state:" + this.getClass().getName(), BukkitEventFilter.ALL, this::isEventFilter);
     }
 
     @Override
     public final void onStart(@NotNull StateMachine stateMachine, @NotNull State state, @Nullable Signal signal) {
+        this.eventNode = EventNode.event("game-state:" + this.getClass().getName(), BukkitEventFilter.ALL, this::isEventFilter);
         this.game.getEventNode().addChild(this.eventNode);
         this.eventNode.bindWith(this);
 

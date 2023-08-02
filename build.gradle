@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.imanity.brew"
-version = "0.4b4-SNAPSHOT"
+version = "0.4b5-SNAPSHOT"
 
 repositories {
     mavenCentral()

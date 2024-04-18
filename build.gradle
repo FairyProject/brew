@@ -3,22 +3,23 @@ plugins {
     id "base"
     id "jacoco"
     id "maven-publish"
-    id "io.fairyproject" version "0.6.6b2-SNAPSHOT"
+    id "io.fairyproject" version "0.7.1b7-SNAPSHOT"
     id "io.spring.dependency-management" version "1.1.0"
 }
 
 group = "dev.imanity.brew"
-version = "0.4b5-SNAPSHOT"
+version = "0.4.1b1-SNAPSHOT"
 
 repositories {
     mavenCentral()
     mavenLocal()
     maven { url = "https://jitpack.io" }
     maven { url = "https://papermc.io/repo/repository/maven-public/" }
+    maven { url = "https://repo.codemc.io/repository/maven-releases/" }
 }
 
 fairy {
-    mainPackage = "dev.imanity.brew"
+    mainPackage = "io.fairyproject.brew"
 }
 
 dependencies {

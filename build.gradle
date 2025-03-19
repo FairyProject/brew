@@ -58,10 +58,6 @@ tasks.withType(JavaCompile) {
 }
 
 if (findProperty("deploy.imanityLibraries") == "true") {
-    tasks.jar.configure {
-        classifier = "sources"
-    }
-
     publishing {
         publications {
             mavenJava(MavenPublication) { publication ->

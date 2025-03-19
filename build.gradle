@@ -3,12 +3,12 @@ plugins {
     id "base"
     id "jacoco"
     id "maven-publish"
-    id "io.fairyproject" version "0.7.1b7-SNAPSHOT"
+    id "io.fairyproject" version "0.7.13b1-SNAPSHOT"
     id "io.spring.dependency-management" version "1.1.0"
 }
 
 group = "dev.imanity.brew"
-version = "0.4.1b1-SNAPSHOT"
+version = "0.4.2b1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -25,12 +25,12 @@ fairy {
 dependencies {
     compileOnly "io.fairyproject:bukkit-platform"
     compileOnly "io.fairyproject:bukkit-timer"
-    compileOnly "io.fairyproject:module.config"
+    compileOnly "io.fairyproject:core-config"
 
     testImplementation "io.fairyproject:bukkit-platform"
     testImplementation "io.fairyproject:bukkit-tests"
     testImplementation "io.fairyproject:bukkit-timer"
-    testImplementation "io.fairyproject:module.config"
+    testImplementation "io.fairyproject:core-config"
 }
 
 dependencies {
